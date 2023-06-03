@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=
+    , initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            width: 800px;
+            height: 800px;
+        }
+
+        #canvas {
+            background-color: #000;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+
+
+
+
+    <script>
+        const can = document.getElementById("canvas");
+        can.width = window.innerWidth;
+        can.height = window.innerHeight;
+        const cxt = can.getContext("2d")
+
+        const m = {
+            x: can.width/2,
+            y: can.height/2
+        }
+
+         //用一个数组存放多个旋转体
+         const arry=[]
+
+         function init(){
+           for(let i=0;i<40;i++){
+             arry.push(new item(can.width,can.height));
+        }
+        
+        }
+        init()
+        function item(x, y) {
+            //位置
+            this.x = x;
+            this.y = y;
+
+            this.angle = Math.PI * 2 * Math.random();
+            this.radius = Math.random() * 100;
+            this.color = `hsl(${Math.random()*360},50%,50%)`
+            //绘画
+            this.draw = function () {
+                cxt.beginPath();
+                cxt.strokeStyle = this.color;
+                cxt.moveTo(this.x, this.y);
+                this.angle += 0.08
+                this.x = m.x + Math.cos(this.angle) * this.radius
+                this.y = m.y + Math.sin(this.angle) * this.radius
+                cxt.lineTo(this.x, this.y);
+                cxt.lineWidth = 5;
+                cxt.stroke();
+                cxt.closePath()
+            }
+        }
+        let items = new item(200, 200);
+        //    items.draw();
+
+
+        function animate() {
+            requestAnimationFrame(animate)
+            cxt.fillStyle = 'rgba(0,0,0,0.05)';
+            cxt.fillRect(0, 0, can.width, can.height)
+            // items.draw()
+            arry.forEach(item=>{
+              item.draw()
+            })
+        }
+        animate()
+
+
+          //监听鼠标变化
+        window.onmousemove = function (e) {
+            m.x = e.clientX;
+            m.y = e.clientY;
+
+        }
+
+    </script>
+</body>
+
+</html>
